@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/gsap.min.js"></script>
+
+    <title>Cursor Catcher</title>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Unbounded:wght@200;300;400;500;600;700;800;900&display=swap');
+
+        * {
+            cursor: none;
+            user-select: none;
+        }
+
+        html,
+        body {
+            --main-background: #121212;
+            --main-secondary-background: #C595FF;
+            --main-header: #ffffff;
+            --main-dark: #121212;
+            --main-light-purple: #C595FF;
+            --main-white: #ffffff;
+            --main-sub: #ffffff;
+
+            --fs-big: 7em;
+            --fs-small: 4em;
+
+            margin: 0;
+            width: 100vw;
+            font-family: 'Unbounded', sans-serif;
+            background-color: var(--main-background);
+
+        }
+
+        .masking-layer {
+            width: 100vw;
+            height: 100vh;
+            position: absolute;
+            background-color: var(--main-secondary-background);
+            --mask: radial-gradient(circle at var(--x, 50.3%) var(--y, 50.3%),
+                    black var(--maskSize1, 0%),
+                    transparent 0,
+                    transparent 0);
+            mask-image: var(--mask);
+            -webkit-mask-image: var(--mask);
+        }
+
+        .button-wrapper {
+            position: absolute;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        .button-wrapper span {
+            color: white;
+            font-size: 50px;
+            font-weight: 500;
+            opacity: 0;
+            transition: 0.5s ease-in;
+        }
+
+        #arrow {
+            transition: 0.5s ease-in;
+
+        }
+
+        .button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            width: 300px;
+            height: 300px;
+        }
+
+        #cursor {
+            z-index: 99;
+            width: 40px;
+            height: 40px;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            border-radius: 50%;
+            background-color: transparent;
+            border: 2px solid grey;
+            pointer-events: none;
+            overflow: hidden;
+            transform: translate(-50%, -50%);
+            transition: mix-blend-mode 0.2s ease-in;
+            transition: background-color 0.2s ease-in;
+            mix-blend-mode: luminosity;
+        }
+
+        footer {
+            height: 40px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            position: fixed;
+            bottom: 0%;
+            color: var(--main-sub);
+            font-size: 12px;
+        }
+
+        footer a {
+            text-decoration: none;
+            color: var(--main-sub);
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 100em) {
+            :root {
+                --fs-big: 7em;
+                --fs-small: 5em;
+            }
+        }
+
+        @media (max-width: 40em) {
+            :root {
+                --fs-big: 5em;
+                --fs-small: 3em;
+            }
+        }
+
+        @media (max-width: 30em) {
+            :root {
+                --fs-big: 4em;
+                --fs-small: 2em;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="cursor"></div>
+
+    <div class="masking-layer">
+    </div>
+    <div class="button-wrapper">
+        <span id="text">EXPLORE MORE</span>
+        <div class="button" id="catcher">
+            <svg id="icon" width="150" height="150" viewBox="0 0 44 44" fill="white" stroke="white"
+                xmlns="http://www.w3.org/2000/svg">
+                <path
+                    d="M43.125 22.1065C43.125 26.3592 41.8861 30.5165 39.5648 34.0525C37.2436 37.5885 33.9443 40.3445 30.0842 41.972C26.2241 43.5994 21.9766 44.0252 17.8787 43.1956C13.7809 42.3659 10.0168 40.318 7.06238 37.3109C4.10799 34.3037 2.09603 30.4724 1.28092 26.3014C0.465808 22.1303 0.884153 17.807 2.48305 13.8779C4.08196 9.94891 6.7896 6.59072 10.2636 4.22803C13.7376 1.86533 17.8219 0.604248 22 0.604248C27.6009 0.610268 32.9707 2.87761 36.9311 6.90876C40.8915 10.9399 43.1191 16.4056 43.125 22.1065ZM39.875 22.1065C39.875 18.508 38.8267 14.9903 36.8625 11.9983C34.8984 9.00631 32.1067 6.67431 28.8405 5.29723C25.5742 3.92016 21.9802 3.55985 18.5128 4.26188C15.0454 4.96391 11.8603 6.69674 9.36048 9.24124C6.86061 11.7857 5.15818 15.0276 4.46847 18.557C3.77876 22.0863 4.13275 25.7445 5.48566 29.0691C6.83858 32.3937 9.12966 35.2352 12.0692 37.2344C15.0087 39.2336 18.4647 40.3007 22 40.3007C26.7391 40.2952 31.2826 38.3766 34.6336 34.9657C37.9847 31.5548 39.8696 26.9302 39.875 22.1065Z" />
+                <path id="arrow"
+                    d="M23.5 12.0041C23.5 11.1757 22.8284 10.5041 22 10.5041C21.1716 10.5041 20.5 11.1757 20.5 12.0041H23.5ZM20.9393 33.2697C21.5251 33.8555 22.4749 33.8555 23.0607 33.2697L32.6066 23.7237C33.1924 23.1379 33.1924 22.1882 32.6066 21.6024C32.0208 21.0166 31.0711 21.0166 30.4853 21.6024L22 30.0877L13.5147 21.6024C12.9289 21.0166 11.9792 21.0166 11.3934 21.6024C10.8076 22.1882 10.8076 23.1379 11.3934 23.7237L20.9393 33.2697ZM20.5 12.0041V32.209H23.5V12.0041H20.5Z" />
+                </svg>
+        </div>
+    </div>
+
+    <footer>
+        <p>Hover over the button to see a cool effect! Created by Codeolences. Find me on Twitter and Youtube
+            @Codeolences
+    </footer>
+
+    <script>
+        const buttonBBox = document.getElementById("catcher").getBoundingClientRect();
+
+        document.getElementById("icon").addEventListener("mouseenter", (event) => {
+            document.getElementById("cursor").style.mixBlendMode = "normal";
+            document.getElementById("cursor").style.backgroundColor = "#B06EFF";
+        })
+
+        document.getElementById("icon").addEventListener("mouseleave", (event) => {
+            document.getElementById("cursor").style.backgroundColor = "";
+            document.getElementById("cursor").style.mixBlendMode = "luminosity";
+        })
+
+        document.addEventListener("mousemove", (event) => {
+            let cursor = document.getElementById("cursor");
+            const left = event.pageX;
+            const top = event.pageY;
+            cursor.style.left = left + "px";
+            cursor.style.top = top + "px";
+        });
+
+        var tl = gsap.timeline({ delay: 0.5 })
+
+        const mask = document.querySelector(".masking-layer")
+        tl.to(mask, {
+            "--maskSize1": "10%",
+            duration: 0.5,
+            ease: "back.out(2)",
+        })
+
+        document.addEventListener("mousemove", debounce(function (event) {
+            const { clientX, clientY } = event;
+            const x = Math.round((clientX / window.innerWidth) * 100);
+            const y = Math.round((clientY / window.innerHeight) * 100);
+
+            const left = event.pageX;
+            const top = event.pageY;
+
+            if (left > buttonBBox.left && left < buttonBBox.right && top > buttonBBox.top && top < buttonBBox.bottom) {
+                lock_cursor();
+            } else {
+                document.getElementById("text").style.opacity = "0";
+                document.getElementById("arrow").style.opacity = "1";
+                gsap.to(mask, {
+                    "--x": `${x}%`,
+                    "--y": `${y}%`,
+                    "--maskSize1": "10%",
+                    duration: 0.7,
+                    ease: "sine.out",
+                })
+            }
+
+        }, 1.5))
+
+        // Debounce function for smooth following of the bubble
+        function debounce(callback, wait) {
+            var timeout;
+            return function (e) {
+                clearTimeout(timeout);
+
+                timeout = setTimeout(() => {
+                    callback(e);
+                }, wait);
+            }
+        }
+
+        function lock_cursor() {
+            const x = Math.round(((buttonBBox.left + 150) / window.innerWidth) * 100);
+            const y = Math.round(((buttonBBox.top + 150) / window.innerHeight) * 100);
+
+            document.getElementById("text").style.opacity = "1";
+            document.getElementById("arrow").style.opacity = "0";
+
+            gsap.to(mask, {
+                "--x": `${x}%`,
+                "--y": `${y}%`,
+                "--maskSize1": "70px",
+                duration: 0.5,
+                ease: "sine.out",
+            })
+        }
+    </script>
+</body>
+
+</html>
